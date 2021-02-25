@@ -1,4 +1,4 @@
-module chenhengqi.com/bpf-examples/change-arguments-on-the-fly
+module chenhengqi.com/bpf-examples/change-arguments-on-the-fly/tracer
 
 go 1.15
 
