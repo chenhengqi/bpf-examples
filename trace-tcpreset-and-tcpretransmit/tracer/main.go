@@ -11,10 +11,12 @@ const bpfProgram = `
 #include <net/sock.h>
 
 int log_tcp_retransmit(struct pt_regs *ctx, struct sock *sk) {
+    bpf_trace_printk("tcp_retransmit\n");
     return 0;
 }
 
 int log_tcp_reset(struct pt_regs *ctx, struct sock *sk) {
+    bpf_trace_printk("tcp_reset port=%d dst=%d state=%d\n", sk->__sk_common.skc_dport, sk->__sk_common.skc_daddr, sk->__sk_common.skc_state);
     return 0;
 }
 `
