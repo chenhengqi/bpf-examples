@@ -1,0 +1,3 @@
+[submodule "tc-traffic-stat/bpf/libbpf"]
+	path = tc-traffic-stat/bpf/libbpf
+	url = https://github.com/libbpf/libbpf.git
