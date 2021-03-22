@@ -19,3 +19,6 @@ exec:
 
 download:
 	curl http://localhost:10086/downloads/testfile --output testfile
+
+clean:
+	rm -f testfile
