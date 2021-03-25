@@ -3,7 +3,7 @@ OUTPUT := .output
 CLANG ?= clang
 LLVM_STRIP ?= llvm-strip
 BPFTOOL ?= bpftool
-LIBBPF_SRC := $(abspath ./libbpf/src)
+LIBBPF_SRC := $(abspath ../../tc-traffic-stat/bpf/libbpf/src)
 LIBBPF_OBJ := $(abspath $(OUTPUT)/libbpf.a)
 INCLUDES := -I$(OUTPUT)
 CFLAGS := -g -O2 -Wall
@@ -15,7 +15,7 @@ ifeq ($(wildcard $(ARCH)/),)
 $(error Architecture $(ARCH) is not supported yet. Please open an issue)
 endif
 
-APPS = trafficstat
+APPS = bandwidthlimit
 
 .PHONY: all
 all: $(APPS)
