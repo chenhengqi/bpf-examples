@@ -13,13 +13,11 @@ static __always_inline int is_secure_source(void *data_begin, void *data_end)
 
 	// ignore
 	if ((void *)(eth_header + 1) > data_end) {
-		bpf_printk("ignore non ethernet frame\n");
 		return 1;
 	}
 
 	// ignore
 	if (eth_header->h_proto != bpf_htons(ETH_P_IP)) {
-		bpf_printk("ignore non ip packet\n");
 		return 1;
 	}
 
@@ -27,13 +25,11 @@ static __always_inline int is_secure_source(void *data_begin, void *data_end)
 
 	// ignore
 	if ((void *)(ip_header + 1) > data_end) {
-		bpf_printk("ignore invalid ip packet\n");
 		return 1;
 	}
 
 	// ignore
 	if (ip_header->protocol != IPPROTO_TCP) {
-		bpf_printk("ignore non tcp payload\n");
 		return 1;
 	}
 
@@ -41,20 +37,16 @@ static __always_inline int is_secure_source(void *data_begin, void *data_end)
 
 	// ignore
 	if ((void *)(tcp_header + 1) > data_end) {
-		bpf_printk("ignore invalid tcp payload\n");
 		return 1;
 	}
 
 	if (tcp_header->dest == bpf_htons(12160)) {
 		if (tcp_header->source != bpf_htons(10216)) {
-			bpf_printk("reject: %d\n", bpf_ntohs(tcp_header->source));
 			return 0;	// reject
 		} else {
-			bpf_printk("accept 10216->12160\n");
 			return 1;	// accept
 		}
 	} else {
-		bpf_printk("allow traffic\n");
 		return 1;
 	}
 }
@@ -65,10 +57,8 @@ int xdp_secure_policy(struct xdp_md *ctx)
 	void *data = (void *)(__u64)ctx->data;
 	void *data_end = (void *)(__u64)ctx->data_end;
 	if (is_secure_source(data, data_end)) {
-		bpf_printk("pass\n");
 		return XDP_PASS;
 	} else {
-		bpf_printk("drop\n");
 		return XDP_DROP;
 	}
 }
