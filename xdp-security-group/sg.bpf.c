@@ -7,7 +7,7 @@
 #include "bpf_helpers.h"
 #include "bpf_endian.h"
 
-static __always_inline int is_secure_source(void *data_begin, void *data_end)
+static int is_secure_source(void *data_begin, void *data_end)
 {
 	struct ethhdr *eth_header = data_begin;
 
