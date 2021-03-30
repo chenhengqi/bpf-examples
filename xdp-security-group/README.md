@@ -1,49 +1,46 @@
-# Network Traffic Stat
+# Implement your own security group
 
-## Create a new network device
-
-```
-$ sudo docker network create my-tc-net
-```
-
-## Create a file for download
+## Run a simple TCP echo server
 
 ```
-$ dd if=/dev/zero of=/tmp/testfile bs=4096 count=131072
+$ cd server
+$ make
+$ make run
 ```
 
-## Run a nginx server that serves file download
+## Interact with the server using netcat
 
+run `netcat` from another host
 ```
-$ sudo docker run -d --rm \
-        -p 10086:80 \
-        -v /tmp/testfile:/home/data/testfile \
-        -v $(PWD)/default.conf:/etc/nginx/conf.d/default.conf \
-        --name my-nginx \
-        --network my-tc-net \
-        nginx:alpine
+$ nc $(SERVER_IP) 12160
+hello world
+hello world
 ```
 
-## Download file and stat network traffic using libpcap
+## Apply our own security policy
 
-On a terminal:
+build BPF program and attach to `eth0`
 ```
-$ sudo ./pcap-stat
-```
-
-On another terminal:
-```
-$ curl http://localhost:10086/downloads/testfile --output testfile
+$ sudo ip link set dev eth0 xdpgeneric obj sg.bpf.o sec xdp verbose
 ```
 
-## Download file and stat network traffic using BPF
+## Now client should fail to send echo request to the server
 
-On a terminal:
 ```
-$ sudo ./bpf-stat
+$ nc $(SERVER_IP) 12160
+hello world
+hello world
+...
+ping
 ```
 
-On another terminal:
+## Interact with the server using netcat from port 10216
+
+run `netcat` again, this time we specify client port
 ```
-$ curl http://localhost:10086/downloads/testfile --output testfile
+$ nc $(SERVER_IP) 12160 -p 10216
+hello world
+hello world
 ```
+
+it works

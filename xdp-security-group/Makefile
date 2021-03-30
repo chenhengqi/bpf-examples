@@ -11,13 +11,7 @@ load:
 	sudo ip link set dev $(DEV_NAME) xdpgeneric obj $(OBJ) sec xdp verbose
 
 unload:
-	sudo ip link set dev $(DEV_NAME) xdp off
-
-run-server:
-	nc -k -l -p 12160
-
-run-client:
-	nc 172.18.0.2 12160
+	sudo ip link set dev $(DEV_NAME) xdpgeneric off
 
 dump:
 	llvm-objdump-10 -S --no-show-raw-insn $(OBJ)
